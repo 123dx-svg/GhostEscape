@@ -1,0 +1,3 @@
+﻿  Player.cpp
+LIBCMT.lib(exe_winmain.obj) : error LNK2001: 无法解析的外部符号 WinMain
+D:\CPPUE4\CPP\GhostEscape\x64\Release\GhostEscape.exe : fatal error LNK1120: 1 个无法解析的外部命令

@@ -46,7 +46,7 @@ void Enemy::update(float deltaTime)
     Actor::update(deltaTime);
     if (target_->getActive())
     {
-        aim_target(target_);
+        if (!move_control_)aim_target(target_);
         move(deltaTime);
         attack();
     }

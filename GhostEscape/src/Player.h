@@ -2,14 +2,13 @@
 #include "WeaponThunder.h"
 #include "affiliate/SpriteAnim.h"
 #include "core/Actor.h"
-#include "raw/MoveControl.h"
 #include "world/Effect.h"
 
 class Timer;
 
 class Player : public Actor
 {
-    MoveControl* move_control_ = nullptr;
+    
     
     WeaponThunder* weapon_thunder_ = nullptr;
     
@@ -28,9 +27,9 @@ public:
     void clean() override ;//需要清理的资源，在这里做
 
     void takeDamage(float damage) override;
-    void setMoveControl(MoveControl* move_control);//同一时刻只有一个移动控制
 
-    void moveControl();
+    //自动逃离
+    void autoEscape();
     void syncCamera();
     void checkState();
     void changeState(bool is_moving);

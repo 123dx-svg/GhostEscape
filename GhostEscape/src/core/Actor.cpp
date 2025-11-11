@@ -3,6 +3,7 @@
 #include "Scene.h"
 #include "../raw/Stats.h"
 #include "../affiliate/AffiliateBar.h"
+#include "../raw/MoveControl.h"
 
 void Actor::update(float deltaTime)
 {
@@ -33,6 +34,26 @@ bool Actor::isAlive() const
         return stats_->getIsAlive();
     }
     return true;
+}
+
+void Actor::setMoveControl(MoveControl* move_control)
+{
+    if (move_control_)
+    {
+        move_control_->setNeedRemove(true);
+    }
+    move_control_ = move_control;
+    move_control_->setParent(this);
+    safeAddChild(move_control_);
+}
+
+void Actor::removeMoveControl()
+{
+    if (move_control_)
+    {
+        move_control_->setNeedRemove(true);
+        move_control_ = nullptr;
+    }
 }
 
 void Actor::updateHealthBar()

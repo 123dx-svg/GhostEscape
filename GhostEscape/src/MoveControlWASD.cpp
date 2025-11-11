@@ -4,8 +4,8 @@ void MoveControlWASD::update(float deltaTime)
 {
     MoveControl::update(deltaTime);
     auto keyboard = SDL_GetKeyboardState(NULL);
-    is_up = keyboard[SDL_SCANCODE_W];
-    is_down = keyboard[SDL_SCANCODE_S];
-    is_left = keyboard[SDL_SCANCODE_A];
-    is_right = keyboard[SDL_SCANCODE_D];
+    is_up_ = keyboard[SDL_SCANCODE_W];
+    is_down_ = keyboard[SDL_SCANCODE_S];
+    is_left_ = keyboard[SDL_SCANCODE_A];
+    is_right_ = keyboard[SDL_SCANCODE_D];
 }

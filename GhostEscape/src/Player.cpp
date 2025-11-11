@@ -1,10 +1,9 @@
 ﻿#include "Player.h"
 
-#include "MoveControlArrow.h"
-#include "MoveControlWASD.h"
 #include "affiliate/SpriteAnim.h"
 #include "affiliate/TextLabel.h"
 #include "core/Scene.h"
+#include "raw/MoveControl.h"
 #include "raw/Stats.h"
 #include "raw/Timer.h"
 
@@ -29,34 +28,19 @@ void Player::init()
     //创建武器
     weapon_thunder_ = WeaponThunder::addWeaponThunderChild(this,2.f,40.f);
 
-    //WASD移动控制
-    move_control_ = new MoveControlWASD();
-    addChild(move_control_);
+    setMoveControl(new MoveControl());
 }
 
 bool Player::handleEvent(SDL_Event& event)
 {
     Actor::handleEvent(event);
     if (weapon_thunder_->handleEvent(event)) return true;
-    //C键切换WASD移动控制 V键盘切换箭头控制
-    if (event.type == SDL_EVENT_KEY_DOWN)
-    {
-        if (event.key.scancode == SDL_SCANCODE_C)
-        {
-            setMoveControl(new MoveControlWASD());
-        }
-        if (event.key.scancode == SDL_SCANCODE_V)
-        {
-            setMoveControl(new MoveControlArrow());
-        }
-        return true;
-    }
     return false;
 }
 void Player::update(float deltaTime)
 {
     Actor::update(deltaTime);
-    moveControl();
+    if (!move_control_) autoEscape();
     checkState();
     move(deltaTime);
     syncCamera();
@@ -82,40 +66,11 @@ void Player::takeDamage(float damage)
     Game::getInstance().playSound("Asset/sound/hit-flesh-02-266309.mp3");
 }
 
-void Player::setMoveControl(MoveControl* move_control)
+void Player::autoEscape()
 {
-    //移除之前的移动控制
-    if (move_control_ != nullptr) 
-    {
-        move_control_->setNeedRemove(true);
-    }
-    move_control_ = move_control;
-    safeAddChild(move_control_);
+    //todo:自动逃离
+    velocity_ = glm::vec2(0,0);
 }
-
-void Player::moveControl()
-{
-    velocity_ *= 0.9f;//添加一定的惯性
-    if (!move_control_)return;
-    if (move_control_->getIsUp())
-    {
-        velocity_.y=-max_speed_;
-    }
-    if (move_control_->getIsDown())
-    {
-        velocity_.y=max_speed_;
-    }
-    if (move_control_->getIsLeft())
-    {
-        velocity_.x = -max_speed_;
-    }
-    if (move_control_->getIsRight())
-    {
-        velocity_.x = max_speed_;
-    }
-    
-}
-
 
 
 void Player::syncCamera()

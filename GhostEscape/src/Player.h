@@ -11,7 +11,6 @@ class Player : public Actor
     
     
     WeaponThunder* weapon_thunder_ = nullptr;
-    
     SpriteAnim* sprite_idle_ = nullptr;
     SpriteAnim* sprite_move_ = nullptr;//组合 生命周期归Player管理
     Effect* effect_ = nullptr; //聚合 生命周期不归Player管理

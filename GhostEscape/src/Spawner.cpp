@@ -20,12 +20,12 @@ void Spawner::update(float deltaTime)
             Effect::addEffectChild(Game::getInstance().getCurrentScene(),"Asset/effect/184_3.png",pos,1,enemy_);
 
             //测试代码转移控制权
-            if (i==0)
-            {
-                enemy_->setMoveControl(new MoveControl());
-                target_->removeMoveControl();
-                
-            }
+            // if (i==0)
+            // {
+            //     enemy_->setMoveControl(new MoveControl());
+            //     target_->removeMoveControl();
+            //     
+            // }
         }
     }
 }

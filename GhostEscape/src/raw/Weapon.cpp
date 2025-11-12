@@ -4,22 +4,50 @@
 #include "../core/Actor.h"
 #include "../core/Scene.h"
 #include "../world/Spell.h"
+#include "../screen/HUDSkill.h"
+
+Weapon* Weapon::addWeaponChild(Actor* parent, float cool_down, float mana_cost)
+{
+    Weapon* weapon = new Weapon();
+    weapon->setParent(parent);
+    weapon->coolDown_ = cool_down;
+    weapon->manaCost_ = mana_cost;
+    if (parent)parent->safeAddChild(weapon);
+    return weapon;
+}
 
 void Weapon::update(float deltaTime)
 {
     Object::update(deltaTime);
     coolDownTimer_ += deltaTime;
-
+    if (skill_hud_) skill_hud_->setPercentage(coolDownTimer_/coolDown_);//更新技能图标
 }
 
-void Weapon::attack(glm::vec2 pos, Spell* spell)
+bool Weapon::handleEvent(SDL_Event& event)
 {
-    if (spell == nullptr) return;
+    if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN)
+    {
+        if (event.button.button == trigger_button_)
+        {
+             attack(Game::getInstance().getMousePos()+Game::getInstance().getCurrentScene()->getCameraPosition());
+            
+             return true;
+            
+        }
+    }
+    return Object::handleEvent(event);
+}
 
+void Weapon::attack(glm::vec2 pos)
+{
+    if (spell_prototype_ == nullptr||!canAttack()) return;
     parent_->getStats()->useMana(manaCost_);
     coolDownTimer_ = 0.0f;
+    //拷贝原型
+    auto spell = spell_prototype_->clone();
     spell->setPosition(pos);
-    Game::getInstance().getCurrentScene()->safeAddChild(spell);
+    //播放攻击音效
+    Game::getInstance().playSound(sound_path_);
 
 }
 

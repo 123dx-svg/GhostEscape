@@ -6,6 +6,7 @@
 #include "raw/MoveControl.h"
 #include "raw/Stats.h"
 #include "raw/Timer.h"
+#include "world/Spell.h"
 
 void Player::init()
 {
@@ -25,8 +26,12 @@ void Player::init()
     //添加特效组件 归为场景管理
     effect_ = Effect::addEffectChild(Game::getInstance().getCurrentScene(),"Asset/effect/1764.png",glm::vec2(0),2.f);
     effect_->setActive(false);
+    
     //创建武器
-    weapon_thunder_ = WeaponThunder::addWeaponThunderChild(this,2.f,40.f);
+    weapon_ = Weapon::addWeaponChild(this,2.f,40.f);
+    auto spell_prototype = Spell::addSpellChild(Game::getInstance().getCurrentScene(), "Asset/effect/Thunderstrike w blur.png", glm::vec2(0), 40.f,3.f);
+    spell_prototype->setActive(false);//场景里加入副本暂时不用
+    weapon_->setSpellPrototype(spell_prototype);
 
     setMoveControl(new MoveControl());
 }
@@ -34,7 +39,7 @@ void Player::init()
 bool Player::handleEvent(SDL_Event& event)
 {
     Actor::handleEvent(event);
-    if (weapon_thunder_->handleEvent(event)) return true;
+    if (weapon_->handleEvent(event)) return true;
     return false;
 }
 void Player::update(float deltaTime)

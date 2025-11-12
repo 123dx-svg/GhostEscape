@@ -40,11 +40,11 @@ bool Weapon::handleEvent(SDL_Event& event)
 
 void Weapon::attack(glm::vec2 pos)
 {
-    if (spell_prototype_ == nullptr||!canAttack()) return;
+    if (spell_creator_ == nullptr||!canAttack()) return;
     parent_->getStats()->useMana(manaCost_);
     coolDownTimer_ = 0.0f;
-    //拷贝原型
-    auto spell = spell_prototype_->clone();
+    //通过工厂模式创建Spell对象
+    auto spell = spell_creator_->createSpell();
     spell->setPosition(pos);
     //播放攻击音效
     Game::getInstance().playSound(sound_path_);

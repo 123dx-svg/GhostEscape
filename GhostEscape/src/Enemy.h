@@ -29,7 +29,7 @@ public:
     
     void init() override;
     void update(float deltaTime) override;
-    
+    void render() override;//如果超出屏幕区域就不渲染
     void aim_target(Player* target);
 
     void checkState();

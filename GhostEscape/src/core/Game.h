@@ -30,9 +30,9 @@ private:
     std::mt19937 gen_ = std::mt19937(std::random_device{}());//随机数生成器
     
     bool is_running_ = true;
-    Uint64 FPS_ = 60;//帧率
-    Uint64 frame_delay_ = 0;//帧延迟
-    float dt_ = 0.f;//帧间隔
+    // Uint64 FPS_ = 60;//帧率
+    // Uint64 frame_delay_ = 0;//帧延迟
+    // float dt_ = 0.f;//帧间隔
     Scene* current_scene_ = nullptr;//当前场景
     Scene* next_scene_ = nullptr;//下一个场景
 
@@ -42,9 +42,9 @@ private:
 public:
 
 
-    void run();//运行游戏
+    //void run();//运行游戏
     void init(std::string title, int width, int height);//初始化游戏
-    void handleEvents();//处理事件
+    void handleEvents(SDL_Event& event);//处理事件
     void update(float deltaTime);//逻辑更新
     void render();//渲染游戏
     void clean();//清理游戏
@@ -68,6 +68,8 @@ public:
     void addScore(int score);
     //退出游戏
     void quit(){is_running_ = false;}
+    //是否退出游戏
+    bool getIsRunning() const{return is_running_;}
     //安全切换场景
     //安全切换场景
     void safeChangeScene(Scene* new_scene){next_scene_ = new_scene;}
@@ -102,7 +104,9 @@ public:
     //工具函数
     bool isMouseInRect(const glm::vec2& top_left, const glm::vec2& button_right);//判断鼠标是否在矩形内
     std::string loadTextFile(const std::string& file_path);//加载文本文件
-
+    bool isRectCollideRect(const glm::vec2& top_left1, const glm::vec2& bottom_right1, const glm::vec2& top_left2, const glm::vec2& bottom_right2);//判断矩形是否碰撞 决定最外层边框是否需要绘制
+    bool isRectInRect (const glm::vec2& top_left1, const glm::vec2& bottom_right1, const glm::vec2& top_left2, const glm::vec2& bottom_right2);
+    
     //获取资源管理器
     AssetStore* getAssetStore() const{return asset_store_;}
 
@@ -121,6 +125,8 @@ public:
 private:
    //游戏鼠标位置 = （系统鼠标位置-偏移量）*缩放比例(逻辑分辨率/窗口大小)
     void updateMouse();
+    //安全切换场景
+    void checkChangeScene();
 };
 
 

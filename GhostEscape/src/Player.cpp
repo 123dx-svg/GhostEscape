@@ -3,8 +3,12 @@
 #include "affiliate/SpriteAnim.h"
 #include "affiliate/TextLabel.h"
 #include "core/Scene.h"
+#include "raw/FireSpellCreator.h"
+#include "raw/MoveControl.h"
 #include "raw/Stats.h"
+#include "raw/ThunderSpellCreator.h"
 #include "raw/Timer.h"
+#include "world/Spell.h"
 
 void Player::init()
 {
@@ -24,22 +28,38 @@ void Player::init()
     //添加特效组件 归为场景管理
     effect_ = Effect::addEffectChild(Game::getInstance().getCurrentScene(),"Asset/effect/1764.png",glm::vec2(0),2.f);
     effect_->setActive(false);
+    
     //创建武器
-    weapon_thunder_ = WeaponThunder::addWeaponThunderChild(this,2.f,40.f);
+    weapon_ = Weapon::addWeaponChild(this,2.f,40.f);
+    auto thunder_spell_creator = new ThunderSpellCreator();
+    thunder_spell_creator->init();
+    weapon_->setSpellCreator(thunder_spell_creator);
+    weapon_->addChild(thunder_spell_creator);
+
     
+    //创建武器2
+    weapon2_ = Weapon::addWeaponChild(this,1.f,10.f);
+    auto fire_spell_creator = new FireSpellCreator();
+    fire_spell_creator->init();
+    weapon2_->setSpellCreator(fire_spell_creator);
+    weapon2_->addChild(fire_spell_creator);
+    //设置音效
+    weapon2_->setSoundPath("Asset/sound/fire-magic-6947.mp3");
+    weapon2_->setTriggerButton(SDL_BUTTON_MIDDLE);
     
+    setMoveControl(new MoveControl());
 }
 
 bool Player::handleEvent(SDL_Event& event)
 {
     Actor::handleEvent(event);
-    if (weapon_thunder_->handleEvent(event)) return true;
+    if (weapon_->handleEvent(event)) return true;
     return false;
 }
 void Player::update(float deltaTime)
 {
     Actor::update(deltaTime);
-    keyboardControl();
+    if (!move_control_) autoEscape();
     checkState();
     move(deltaTime);
     syncCamera();
@@ -65,29 +85,11 @@ void Player::takeDamage(float damage)
     Game::getInstance().playSound("Asset/sound/hit-flesh-02-266309.mp3");
 }
 
-void Player::keyboardControl()
+void Player::autoEscape()
 {
-    velocity_ *= 0.9f;//添加一定的惯性
-    auto currentKeyStates = SDL_GetKeyboardState(nullptr);
-    if (currentKeyStates[SDL_SCANCODE_W])
-    {
-        velocity_.y=-max_speed_;
-    }
-    if (currentKeyStates[SDL_SCANCODE_S])
-    {
-        velocity_.y=max_speed_;
-    }
-    if (currentKeyStates[SDL_SCANCODE_A])
-    {
-        velocity_.x = -max_speed_;
-    }
-    if (currentKeyStates[SDL_SCANCODE_D])
-    {
-        velocity_.x = max_speed_;
-    }
-    
+    //todo:自动逃离
+    velocity_ = glm::vec2(0,0);
 }
-
 
 
 void Player::syncCamera()

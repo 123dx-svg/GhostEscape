@@ -1,7 +1,10 @@
 ﻿#include "HUDButton.h"
 
+#include "../state/ButtonState.h"
+#include "../state/ButtonStateNormal.h"
+
 HUDButton* HUDButton::addHUDButtonChild(Object* parent,const glm::vec2& position, const std::string& file_path1,
-    const std::string& file_path2, const std::string& file_path3, float scale, Anchor anchor)
+                                        const std::string& file_path2, const std::string& file_path3, float scale, Anchor anchor)
 {
     auto button = new HUDButton();
     button->init();
@@ -11,85 +14,29 @@ HUDButton* HUDButton::addHUDButtonChild(Object* parent,const glm::vec2& position
     button->sprite_press_ = Sprite::addSpriteChild(button, file_path3, scale, anchor);
     button->sprite_hover_->setActive(false);
     button->sprite_press_->setActive(false);
+    button->changeState(new ButtonStateNormal());
     if (parent) parent->addChild(button);
     return button;
 }
 
-bool HUDButton::handleEvent(SDL_Event& event)
+void HUDButton::changeState(ButtonState* new_state)
 {
-    ObjectScreen::handleEvent(event);
-    if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN)
+    //旧状态退出
+       if (button_state_)
+       {
+           button_state_->onExit();
+           button_state_->setNeedRemove(true);
+       }
+    //新状态进入
+    if (new_state)
     {
-        //左键按下
-        if (event.button.button == SDL_BUTTON_LEFT)
-        {
-            if (is_hover_)
-            {
-                is_press_ = true;
-                Game::getInstance().playSound("Asset/sound/UI_button08.wav");
-                return true;
-            }
-        }
-    }else if (event.type == SDL_EVENT_MOUSE_BUTTON_UP)
-    {
-        //左键松开
-        if (event.button.button == SDL_BUTTON_LEFT)
-        {
-            is_press_ = false;
-            if (is_hover_)//在范围内松开就是触发
-            {
-                is_trigger_ = true;
-                return true;
-            }
-            
-        }
-    }
-    return false;
-}
-
-void HUDButton::update(float deltaTime)
-{
-    ObjectScreen::update(deltaTime);
-    checkHover();
-    checkState();
-}
-
-void HUDButton::checkHover()
-{
-    bool new_hover_;
-    auto pos = render_position + sprite_normal_->getOffset();
-    auto size = sprite_normal_->getSize();
-    if (Game::getInstance().isMouseInRect(pos,pos+size))
-    {
-        new_hover_ = true;
-    }else
-    {
-        new_hover_ = false;
-    }
-    if (new_hover_!=is_hover_)
-    {
-        is_hover_ = new_hover_;
-        if (is_hover_&&!is_press_) Game::getInstance().playSound("Asset/sound/UI_button12.wav");
-    }
-}
-
-void HUDButton::checkState()
-{
-    if (!is_press_ && !is_hover_)
-    {
-        sprite_normal_->setActive(true);
-        sprite_hover_->setActive(false);
-        sprite_press_->setActive(false);
-    }else if (!is_press_&& is_hover_)
-    {
-        sprite_normal_->setActive(false);
-        sprite_hover_->setActive(true);
-        sprite_press_->setActive(false);
-    }else
-    {
-        sprite_normal_->setActive(false);
-        sprite_hover_->setActive(false);
-        sprite_press_->setActive(true);
+        button_state_ = new_state;
+        button_state_->init();
+        //这个先后顺序不能反
+        new_state->setParent(this);
+        new_state->onEnter();
+        //自动管理生命周期
+        safeAddChild(button_state_);
     }
 }
 
@@ -98,8 +45,6 @@ bool HUDButton::getIsTrigger()
     if (is_trigger_)
     {
         is_trigger_ = false;
-        is_press_ = false;
-        is_hover_ = false;
         return true;
     }
     return false;

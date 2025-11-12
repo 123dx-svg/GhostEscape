@@ -9,7 +9,7 @@ protected:
 
 public:
     void init() override;
-    glm::vec2 getRenderPosition() const {return  render_position;}
+    virtual  glm::vec2 getRenderPosition() {return  render_position;}
     virtual  void setRenderPosition(const glm::vec2& pos) {render_position = pos;}
     virtual  glm::vec2 getPosition() const {return glm::vec2(0);}
 

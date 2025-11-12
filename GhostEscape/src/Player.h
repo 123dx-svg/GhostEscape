@@ -1,15 +1,18 @@
 ﻿#pragma once
-#include "WeaponThunder.h"
+
 #include "affiliate/SpriteAnim.h"
 #include "core/Actor.h"
+#include "raw/Weapon.h"
 #include "world/Effect.h"
 
 class Timer;
 
 class Player : public Actor
 {
-    WeaponThunder* weapon_thunder_ = nullptr;
     
+    
+    Weapon* weapon_ = nullptr;
+    Weapon* weapon2_ = nullptr;
     SpriteAnim* sprite_idle_ = nullptr;
     SpriteAnim* sprite_move_ = nullptr;//组合 生命周期归Player管理
     Effect* effect_ = nullptr; //聚合 生命周期不归Player管理
@@ -26,12 +29,18 @@ public:
 
     void takeDamage(float damage) override;
 
-    void keyboardControl();
-    
+    //自动逃离
+    void autoEscape();
     void syncCamera();
     void checkState();
     void changeState(bool is_moving);
     void checkIsDead();
+
+    //get set
+    Weapon* getWeapon() { return weapon_; }
+    void setWeapon(Weapon* weapon) { weapon_ = weapon; }
+    Weapon* getWeapon2() { return weapon2_; }
+    void setWeapon2(Weapon* weapon2) { weapon2_ = weapon2; }
 };
 
 

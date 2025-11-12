@@ -9,6 +9,7 @@
 #include "raw/BGStar.h"
 #include "raw/Timer.h"
 #include "screen/HUDButton.h"
+#include "screen/HUDSkill.h"
 #include "screen/HUDStats.h"
 #include "screen/HUDText.h"
 #include "screen/UIMouse.h"
@@ -66,7 +67,17 @@ void SceneMain::init()
 
     //鼠标图标 
     ui_mouse_ = UIMouse::addUIMouse(this,"Asset/UI/29.png","Asset/UI/30.png",1);
+
+    //创建武器图标
+    auto scene = Game::getInstance().getCurrentScene();
+    auto pos = glm::vec2(Game::getInstance().getScreenSize().x - 300,30);
+    auto skill_hud = HUDSkill::addHUDSkillChild(scene, "Asset/UI/Electric-Icon.png", pos, 0.14f, Anchor::CENTER);
+   
+    auto skill_hud2 = HUDSkill::addHUDSkillChild(scene, "Asset/UI/Fire-Icon.png", pos - glm::vec2(50,0), 0.14f, Anchor::CENTER);
     
+    
+    player_->getWeapon()->setSkillHUD(skill_hud);
+    player_->getWeapon2()->setSkillHUD(skill_hud2);
 }
 
 bool SceneMain::handleEvent(SDL_Event& event)

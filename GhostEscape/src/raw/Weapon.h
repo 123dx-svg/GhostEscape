@@ -26,7 +26,7 @@ public:
     
     void update(float deltaTime) override;
     bool handleEvent(SDL_Event& event) override;
-    void attack(glm::vec2 pos);//确保调用attack
+    void attack(glm::vec2 pos);
     bool canAttack();//判断是否可以攻击
 
     

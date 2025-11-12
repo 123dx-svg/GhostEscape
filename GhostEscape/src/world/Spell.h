@@ -13,7 +13,7 @@ protected:
 public:
     static Spell* addSpellChild(Object* parent,const std::string& file_path,glm::vec2 pos,float damage,float scale = 1.f,Anchor anchor = Anchor::CENTER);
 
-    Spell* clone();
+    Spell* clone() override;
     
     void update(float deltaTime) override;
     void setSprite(SpriteAnim* spr) {sprite_ = spr;}

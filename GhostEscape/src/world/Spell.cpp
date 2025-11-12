@@ -19,7 +19,7 @@ Spell* Spell::addSpellChild(Object* parent, const std::string& file_path, glm::v
     return spell;
 }
 
-Spell* Spell::clone()
+Spell* Spell::clone() 
 {
     return addSpellChild(Game::getInstance().getCurrentScene(),file_path_,
         getPosition(),damage_,scale_,sprite_->getAnchor());

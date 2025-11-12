@@ -12,6 +12,7 @@ class Player : public Actor
     
     
     Weapon* weapon_ = nullptr;
+    Weapon* weapon2_ = nullptr;
     SpriteAnim* sprite_idle_ = nullptr;
     SpriteAnim* sprite_move_ = nullptr;//组合 生命周期归Player管理
     Effect* effect_ = nullptr; //聚合 生命周期不归Player管理
@@ -38,6 +39,8 @@ public:
     //get set
     Weapon* getWeapon() { return weapon_; }
     void setWeapon(Weapon* weapon) { weapon_ = weapon; }
+    Weapon* getWeapon2() { return weapon2_; }
+    void setWeapon2(Weapon* weapon2) { weapon2_ = weapon2; }
 };
 
 

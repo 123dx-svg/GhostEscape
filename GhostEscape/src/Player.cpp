@@ -33,6 +33,16 @@ void Player::init()
     spell_prototype->setActive(false);//场景里加入副本暂时不用
     weapon_->setSpellPrototype(spell_prototype);
 
+    
+    //创建武器2
+    weapon2_ = Weapon::addWeaponChild(this,1.f,10.f);
+    auto spell_prototype2 = Spell::addSpellChild(Game::getInstance().getCurrentScene(), "Asset/effect/Explosion 2 SpriteSheet.png", glm::vec2(0), 20.f,3.f);
+    spell_prototype2->setActive(false);//场景里加入副本暂时不用
+    weapon2_->setSpellPrototype(spell_prototype2);
+    //设置音效
+    weapon2_->setSoundPath("Asset/sound/fire-magic-6947.mp3");
+    weapon2_->setTriggerButton(SDL_BUTTON_MIDDLE);
+    
     setMoveControl(new MoveControl());
 }
 

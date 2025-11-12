@@ -72,7 +72,12 @@ void SceneMain::init()
     auto scene = Game::getInstance().getCurrentScene();
     auto pos = glm::vec2(Game::getInstance().getScreenSize().x - 300,30);
     auto skill_hud = HUDSkill::addHUDSkillChild(scene, "Asset/UI/Electric-Icon.png", pos, 0.14f, Anchor::CENTER);
+   
+    auto skill_hud2 = HUDSkill::addHUDSkillChild(scene, "Asset/UI/Fire-Icon.png", pos - glm::vec2(50,0), 0.14f, Anchor::CENTER);
+    
+    
     player_->getWeapon()->setSkillHUD(skill_hud);
+    player_->getWeapon2()->setSkillHUD(skill_hud2);
 }
 
 bool SceneMain::handleEvent(SDL_Event& event)

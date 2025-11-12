@@ -14,6 +14,8 @@ public:
 
     virtual  void takeDamage(float damage) {return;}
     
+    virtual ObjectWorld* clone() {return nullptr;} //用到的子类重写
+    
     virtual  glm::vec2 getPosition() const override {return position_;}
     void setPosition(const glm::vec2& position);
     virtual void setRenderPosition(const glm::vec2& pos) override;

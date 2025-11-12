@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <fstream>
 
-#include "../SceneMain.h"
 #include "../SceneTitle.h"
 #include "../affiliate/Sprite.h"
 // void Game::run()
@@ -248,6 +247,22 @@ std::string Game::loadTextFile(const std::string& file_path)
     return content;
 }
 
+bool Game::isRectCollideRect(const glm::vec2& top_left1, const glm::vec2& bottom_right1, const glm::vec2& top_left2,
+    const glm::vec2& bottom_right2)
+{
+    //aabb碰撞检测
+    return top_left1.x < bottom_right2.x && bottom_right1.x > top_left2.x &&
+           top_left1.y < bottom_right2.y && bottom_right1.y > top_left2.y;
+}
+
+bool Game::isRectInRect(const glm::vec2& top_left1, const glm::vec2& bottom_right1, const glm::vec2& top_left2,
+    const glm::vec2& bottom_right2)
+{
+    //判断矩形1是否完全在矩形2内
+    return top_left1.x > top_left2.x && bottom_right1.x < bottom_right2.x &&
+           top_left1.y > top_left2.y && bottom_right1.y < bottom_right2.y;
+}
+
 void Game::updateMouse()
 {
     //处理屏幕缩放导致的鼠标偏移
@@ -278,13 +293,13 @@ void Game::checkChangeScene()
 void Game::drawGrid(const glm::vec2& top_left, const glm::vec2& bottom_right, int grid_width, SDL_FColor color)
 {
     SDL_SetRenderDrawColorFloat(renderer_, color.r , color.g, color.b, color.a);
-    //绘制竖线
-    for (float x = top_left.x; x <= bottom_right.x; x += grid_width)
+    //绘制竖线 mod为取余运算 起点之前终点之后的线就不计算绘制了
+    for (float x = glm::mod(top_left.x,static_cast<float>(grid_width)); x <= screen_size_.x; x += grid_width)
     {
         SDL_RenderLine(renderer_, x, top_left.y, x, bottom_right.y);
     }
     //绘制横线
-    for (float y = top_left.y; y <= bottom_right.y; y += grid_width)
+    for (float y = glm::mod(top_left.y,static_cast<float>(grid_width)); y <= screen_size_.y; y += grid_width)
     {
         SDL_RenderLine(renderer_,top_left.x, y, bottom_right.x, y);
     }
@@ -293,6 +308,11 @@ void Game::drawGrid(const glm::vec2& top_left, const glm::vec2& bottom_right, in
 
 void Game::drawBoundary(const glm::vec2& top_left, const glm::vec2& bottom_right, int boundary_width, SDL_FColor color)
 {
+    if (!isRectCollideRect(top_left - glm::vec2(boundary_width),bottom_right + glm::vec2(boundary_width),glm::vec2(0),screen_size_)
+        ||isRectInRect(glm::vec2(0),screen_size_,top_left,bottom_right))
+    {
+        return;
+    }
     SDL_SetRenderDrawColorFloat(renderer_, color.r, color.g, color.b, color.a);
     for (float i = 0; i < boundary_width; ++i)
     {

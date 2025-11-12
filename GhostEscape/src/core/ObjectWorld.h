@@ -19,7 +19,7 @@ public:
     virtual  glm::vec2 getPosition() const override {return position_;}
     void setPosition(const glm::vec2& position);
     virtual void setRenderPosition(const glm::vec2& pos) override;
-
+    glm::vec2 getRenderPosition() override;
     Collider* getCollider() const {return collider_;}
     void setCollider(Collider* collider){collider_ = collider;}
 };

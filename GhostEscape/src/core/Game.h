@@ -104,7 +104,9 @@ public:
     //工具函数
     bool isMouseInRect(const glm::vec2& top_left, const glm::vec2& button_right);//判断鼠标是否在矩形内
     std::string loadTextFile(const std::string& file_path);//加载文本文件
-
+    bool isRectCollideRect(const glm::vec2& top_left1, const glm::vec2& bottom_right1, const glm::vec2& top_left2, const glm::vec2& bottom_right2);//判断矩形是否碰撞 决定最外层边框是否需要绘制
+    bool isRectInRect (const glm::vec2& top_left1, const glm::vec2& bottom_right1, const glm::vec2& top_left2, const glm::vec2& bottom_right2);
+    
     //获取资源管理器
     AssetStore* getAssetStore() const{return asset_store_;}
 

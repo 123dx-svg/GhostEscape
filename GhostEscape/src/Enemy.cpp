@@ -43,7 +43,12 @@ void Enemy::init()
 
 void Enemy::update(float deltaTime)
 {
-    Actor::update(deltaTime);
+    //窗口外的敌人不更新
+    auto render_pos_start = getRenderPosition() + current_anim_->getOffset();
+    auto render_pos_end = render_pos_start + current_anim_->getOffset();
+    if (!Game::getInstance().isRectCollideRect(render_pos_start,render_pos_end,glm::vec2(0),Game::getInstance().getScreenSize()))
+        return;
+    
     if (target_->getActive())
     {
         if (!move_control_)aim_target(target_);
@@ -53,6 +58,17 @@ void Enemy::update(float deltaTime)
 
     checkState();
     remove();
+    
+    Actor::update(deltaTime);
+}
+
+void Enemy::render()
+{
+    auto render_pos_start = getRenderPosition() + current_anim_->getOffset();
+    auto render_pos_end = render_pos_start + current_anim_->getOffset();
+    if (!Game::getInstance().isRectCollideRect(render_pos_start,render_pos_end,glm::vec2(0),Game::getInstance().getScreenSize()))
+        return;
+    Actor::render();
 }
 
 void Enemy::aim_target(Player* target)
